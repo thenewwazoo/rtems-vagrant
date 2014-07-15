@@ -15,7 +15,7 @@ git clone -b "${BUILD_BRANCH}" https://github.com/bengras/rtems-source-builder.g
 git clone -b "${TOOLS_BRANCH}" https://github.com/bengras/rtems-tools.git
 git clone -b "${RTEMS_BRANCH}" https://github.com/bengras/rtems.git
 
-chown vagrant:vagrant *
+chown -R vagrant:vagrant *
 
 # sb-check returns 0 on failed check (but without fatal error), so work around
 isok=$(./rtems-source-builder/source-builder/sb-check | grep -c "Environment is ok")
