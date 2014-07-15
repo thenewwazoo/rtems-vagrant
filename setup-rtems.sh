@@ -11,9 +11,9 @@ apt-get update
 apt-get install -y git
 apt-get build-dep -y binutils gcc g++ gdb unzip git python2.7-dev
 
-vagrant git clone -b "${BUILD_BRANCH}" https://github.com/bengras/rtems-source-builder.git 
-vagrant git clone -b "${TOOLS_BRANCH}" https://github.com/bengras/rtems-tools.git
-vagrant git clone -b "${RTEMS_BRANCH}" https://github.com/bengras/rtems.git
+git clone -b "${BUILD_BRANCH}" https://github.com/bengras/rtems-source-builder.git 
+git clone -b "${TOOLS_BRANCH}" https://github.com/bengras/rtems-tools.git
+git clone -b "${RTEMS_BRANCH}" https://github.com/bengras/rtems.git
 
 chown vagrant:vagrant *
 
