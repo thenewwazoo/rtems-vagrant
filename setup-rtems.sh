@@ -1,25 +1,25 @@
 #!/bin/bash
 
-set -e
-
-BUILD_BRANCH=master
-TOOLS_BRANCH=master
-RTEMS_BRANCH=master
+BUILD_BRANCH=bbxm
+TOOLS_BRANCH=bbxm-wip
+RTEMS_BRANCH=beaglebone-wip
 
 DEBIAN_FRONTEND=noninteractive
 apt-get update
-apt-get install -y git
 apt-get build-dep -y binutils gcc g++ gdb unzip git python2.7-dev
 
-git clone -b "${BUILD_BRANCH}" https://github.com/bengras/rtems-source-builder.git 
-git clone -b "${TOOLS_BRANCH}" https://github.com/bengras/rtems-tools.git
-git clone -b "${RTEMS_BRANCH}" https://github.com/bengras/rtems.git
+git clone -b "${BUILD_BRANCH}" https://github.com/thenewwazoo/rtems-source-builder.git  || exit 1
+git clone -b "${TOOLS_BRANCH}" https://github.com/thenewwazoo/rtems-tools.git || exit 1
+git clone -b "${RTEMS_BRANCH}" https://github.com/thenewwazoo/rtems.git || exit 1
 
-chown vagrant:vagrant *
+chown -R vagrant:vagrant *
 
 # sb-check returns 0 on failed check (but without fatal error), so work around
-isok=$(./rtems-source-builder/source-builder/sb-check | grep -c "Environment is ok")
+sbout=$(./rtems-source-builder/source-builder/sb-check)
+isok=$(echo "${sbout}" | grep -c "Environment is ok")
 if [[ $? != 0 ]]; then
-    echo "sb-check failed. exiting"
+    echo "sb-check failed: ${sbout}"
     exit 1
+else
+    echo "${sbout}"
 fi
