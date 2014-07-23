@@ -4,7 +4,7 @@ BUILD_BRANCH=beagle
 RTEMS_BRANCH=beaglebone-wip
 TOOLS_BRANCH=bbxm-wip
 
-GIT_ROOT="https://github.com/thenewwazoo"
+GIT_ROOT="https://github.com/bengras"
 
 echo "Updating host environment..."
 DEBIAN_FRONTEND=noninteractive
