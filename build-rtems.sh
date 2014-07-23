@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# This script attempts to build absolutely everything in the stable
-#  section of the project.
+SB_BSET="devel/beaglebone_black.bset"
+RTEMS_TARGET="arm"
+RTEMS_BSP="beagleboneblack"
 
 RTEMS_VERSION="4.11"
 export PREFIX=$HOME/development/rtems/${RTEMS_VERSION}
@@ -12,14 +13,14 @@ cd rtems-source-builder/rtems/
   --log=sb-set-builder.log \
   --prefix="${PREFIX}" \
   --with-rtems \
-  "devel/beaglebone_black.bset"
+  "${SB_BSET}"
 
-#cd ../../rtems/
-#./bootstrap
-#cd ..; mkdir rtems-build; cd rtems-build
-#
-#../rtems/configure \
-#    --enable-tests \
-#    --target=${target}-rtems${RTEMS_VERSION} \
-#    --enable-rtemsbsp=beagleboneblack
-#make all
+cd ../../rtems/
+./bootstrap
+cd ..; mkdir rtems-build; cd rtems-build
+
+../rtems/configure \
+    --enable-tests \
+    --target=${RTEMS_TARGET}-rtems${RTEMS_VERSION} \
+    --enable-rtemsbsp=${RTEMS_BSP}
+make all
