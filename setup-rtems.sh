@@ -36,12 +36,12 @@ echo "Checkout out RTEMS source..."
 git clone -b "${RTEMS_BRANCH}" ${GIT_ROOT}/rtems.git rtems-src || exit 1
 
 echo "Bootstrapping RTEMS..."
-cd rtems
+cd rtems-src
 ./bootstrap ; ./bootstrap -p
 
 echo "Building RTEMS..."
 mkdir /home/vagrant/development/rtems/b-beagle; cd /home/vagrant/development/rtems/b-beagle
-CONSOLE_POLLED=1 /home/vagrant/development/rtems/sources/rtems/configure \
+CONSOLE_POLLED=1 /home/vagrant/development/rtems-src/sources/rtems/configure \
     --target=arm-rtems4.11 \
     --enable-rtemsbsp="beagleboneblack beagleboardxm" \
     --enable-tests
