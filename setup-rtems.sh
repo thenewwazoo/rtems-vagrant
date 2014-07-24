@@ -31,7 +31,7 @@ cd rtems-source-builder/rtems
     devel/beagle.bset
 
 export PATH=/home/vagrant/development/rtems/4.11/bin:$PATH
-cd /home/vagrant/development/rtems/sources/
+cd /home/vagrant/development/rtems/
 
 echo "Checkout out RTEMS source..."
 git clone -b "${RTEMS_BRANCH}" ${GIT_ROOT}/rtems.git rtems-src || exit 1
@@ -42,7 +42,7 @@ cd rtems-src
 
 echo "Building RTEMS..."
 mkdir /home/vagrant/development/rtems/b-beagle; cd /home/vagrant/development/rtems/b-beagle
-CONSOLE_POLLED=1 /home/vagrant/development/rtems/sources/rtems-src/configure \
+CONSOLE_POLLED=1 /home/vagrant/development/rtems/rtems-src/configure \
     --target=arm-rtems4.11 \
     --enable-rtemsbsp="beagleboneblack beagleboardxm" \
     --enable-tests
