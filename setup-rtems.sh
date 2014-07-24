@@ -54,7 +54,7 @@ if [ $? != 0 ]; then
 fi
 
 echo "Building a hello-world SD card image..."
-cd /home/vagrant/development/rtems/sources/rtems-src/c/src/lib/libbsp/arm/beagle/simscripts
+cd /home/vagrant/development/rtems/rtems-src/c/src/lib/libbsp/arm/beagle/simscripts
 sh sdcard.sh \
     /home/vagrant/development/rtems/4.11 \
     /home/vagrant/development/rtems/b-beagle/arm-rtems4.11/c/beagleboneblack/testsuites/samples/hello/hello.exe
