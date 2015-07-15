@@ -1,10 +1,10 @@
 #!/bin/bash
 
+RTEMS_BRANCH=master
 BUILD_BRANCH=beagle
-RTEMS_BRANCH=beaglebone-wip
-TOOLS_BRANCH=bbxm-wip
 
-GIT_ROOT="https://github.com/bengras"
+RTEMS_ROOT="https://github.com/rtems"
+BUILD_ROOT="https://github.com/bengras"
 
 echo "Updating host environment..."
 DEBIAN_FRONTEND=noninteractive
@@ -16,14 +16,14 @@ cd /home/vagrant/
 
 mkdir -p development/rtems/sources ; cd development/rtems/sources
 
-echo "Checking out build tools..."
-git clone -b "${BUILD_BRANCH}" ${GIT_ROOT}/rtems-source-builder.git  || exit 1
+echo "Checking out source builder..."
+git clone -b "${BUILD_BRANCH}" ${BUILD_ROOT}/rtems-source-builder.git  || exit 1
 
 echo "Checking build environment..."
 # sb-check returns 0 on failed check (but without fatal error), so ignore the output
 ./rtems-source-builder/source-builder/sb-check
 
-echo "Building source tools..."
+echo "Building tools..."
 cd rtems-source-builder/rtems
 ../source-builder/sb-set-builder \
     --log=beagle.txt \
@@ -34,7 +34,7 @@ export PATH=/home/vagrant/development/rtems/4.11/bin:$PATH
 cd /home/vagrant/development/rtems/
 
 echo "Checkout out RTEMS source..."
-git clone -b "${RTEMS_BRANCH}" ${GIT_ROOT}/rtems.git rtems-src || exit 1
+git clone -b "${RTEMS_BRANCH}" ${RTEMS_ROOT}/rtems.git rtems-src || exit 1
 
 echo "Bootstrapping RTEMS..."
 cd rtems-src
@@ -44,8 +44,7 @@ echo "Building RTEMS..."
 mkdir /home/vagrant/development/rtems/b-beagle; cd /home/vagrant/development/rtems/b-beagle
 CONSOLE_POLLED=1 /home/vagrant/development/rtems/rtems-src/configure \
     --target=arm-rtems4.11 \
-    --enable-rtemsbsp="beagleboneblack beagleboardxm" \
-    --enable-tests
+    --enable-rtemsbsp="beagleboneblack beagleboardxm"
 make
 
 if [ $? != 0 ]; then
@@ -53,28 +52,17 @@ if [ $? != 0 ]; then
     exit 1
 fi
 
-echo "Building a hello-world SD card image..."
-cd /home/vagrant/development/rtems/rtems-src/c/src/lib/libbsp/arm/beagle/simscripts
-sh sdcard.sh \
-    /home/vagrant/development/rtems/4.11 \
-    /home/vagrant/development/rtems/b-beagle/arm-rtems4.11/c/beagleboneblack/testsuites/samples/hello/hello.exe
-if [[ ! -e bone_hello.exe-sdcard.img ]]; then
-    echo "Failed to build SD card image."
+make install
+
+if [ $? != 0 ]; then
+    echo "Install failed!"
     exit 1
 fi
-cp bone_hello.exe-sdcard.img /vagrant/
 
-echo "Getting testing tools..."
-cd /home/vagrant/development/rtems/
-git clone -b "${TOOLS_BRANCH}" ${GIT_ROOT}/rtems-tools.git || exit 1
-
-echo "Running tests..."
-cd rtems-tools/tester
-./rtems-test \
-    --log=bbxm.log \
-    --report-mode=all \
-    --rtems-bsp=beagleboardxm_qemu \
-    --rtems-tools=/home/vagrant/development/rtems/4.11 \
-    /home/vagrant/development/rtems/b-beagle/arm-rtems4.11/c/beagleboardxm
+echo <<EOF > ~vagrant/.bash_profile
+export RTEMS_PREFIX=/home/vagrant/development/rtems/4.11
+export RTEMS_MAKEFILE_PATH=/opt/rtems-4.11/arm-rtems4.11/beagleboneblack
+export PATH=/home/vagrant/development/rtems/4.11/bin:$PATH
+EOF
 
 chown -R vagrant:vagrant /home/vagrant/
