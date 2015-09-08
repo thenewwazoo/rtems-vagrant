@@ -63,6 +63,10 @@ echo <<EOF > ~vagrant/.bash_profile
 export RTEMS_PREFIX=/home/vagrant/development/rtems/4.11
 export RTEMS_MAKEFILE_PATH=/opt/rtems-4.11/arm-rtems4.11/beagleboneblack
 export PATH=/home/vagrant/development/rtems/4.11/bin:$PATH
+
+alias go="make && cd ~/build_output/ && /home/vagrant/development/rtems/rtems-src/c/src/lib/libbsp/arm/beagle/simscripts/sdcard.sh $RTEMS_PREFIX ./beaglebone.exe && cp bone_beaglebone.exe-sdcard.img /vagrant/beaglebone-test1/ && cd -"
 EOF
 
+echo 'Be sure to make a symlink from o-optimize to /home/vagrant/build_output/'
+mkdir /home/vagrant/build_output
 chown -R vagrant:vagrant /home/vagrant/
